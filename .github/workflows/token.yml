@@ -1,13 +1,11 @@
-name: Retrieve Media Prima Dailymotion HLS manifest with token
+# This is a basic workflow to help you get started with Actions
 
-# Controls when the action will run. 
+name: dailymotion_m3ugrabber
+
+# Controls when the workflow will run
 on:
   schedule:
-    - cron: '0 0/1 * * *'
-    
-  pull_request:
-    branches:
-      - main
+    - cron: '0 4,16 * * *'
   
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
@@ -24,37 +22,28 @@ jobs:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v2
 
-      # Runs a single command using the runners shell
-      #- name: Run a one-line script
-      #  run: echo testing!
-
-      # Runs a set of commands using the runners shell 
-     
+      # 
+      - name: config
+        run: |
+          git config --global user.email "warisaguna@gmail.com"
+          git config --global user.name "555Z555"
+      
       
       - name: Main
-        env: 
-         AUTH: ${{ secrets.AUTH }} 
-
         run: |
           pwd
-          chmod +x download_token.sh
-          ./download_token.sh
+          chmod +x autorun_github.sh
+          ./autorun_github.sh
+          #cd scripts
+          #python3 dailymotion_m3ugrabber.py > ../dramasangat.m3u8
+          echo "m3u grabbed"
         
       - name: git add
         run: |
           git add -A
           ls -la 
           
-      - name: config
+      - name: commit & push
         run: |
-          git config --global user.email warisaguna@gmail.com
-          git config --global user.name 555Z555
-          git add .
-          git commit -m "Update new token" 
-      
-      - name: commit
-        uses: ad-m/github-push-action@master
-        with:
-         github_token: ${{ secrets.GITHUB_TOKEN }}
-         branch: main
-         force-push: true
+          git commit -m "links are updated"
+          git push
